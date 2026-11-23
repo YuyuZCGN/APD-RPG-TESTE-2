@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ficha de personagem interativa para RPG de mesa.">
+  <title>Ficha de Personagem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="title">
+      <p class="eyebrow">Criação de Personagem</p>
+      <h1>Ficha de Personagem</h1>
+      <div class="rule" aria-hidden="true"><span></span></div>
+    </header>
+
+    <!-- ATRIBUTOS PRIMÁRIOS -->
+    <section class="section" aria-labelledby="attrs-title">
+      <div class="section-head">
+        <h2 id="attrs-title">Atributos Primários</h2>
+        <div class="points" id="points" aria-live="polite">
+          <span class="points-label">Pontos distribuídos</span>
+          <span class="points-value"><b id="pointsSpent">0</b></span>
+        </div>
+      </div>
+
+      <div class="attr-grid">
+        <article class="card attr themed t-corpo" data-attr="corpo">
+          <h3>Corpo</h3>
+          <div class="value" id="val-corpo">0</div>
+          <div class="controls">
+            <button type="button" class="step" data-attr="corpo" data-dir="-1" aria-label="Diminuir Corpo">−</button>
+            <button type="button" class="step" data-attr="corpo" data-dir="1" aria-label="Aumentar Corpo">+</button>
+          </div>
+        </article>
+
+        <article class="card attr themed t-mente" data-attr="mente">
+          <h3>Mente</h3>
+          <div class="value" id="val-mente">0</div>
+          <div class="controls">
+            <button type="button" class="step" data-attr="mente" data-dir="-1" aria-label="Diminuir Mente">−</button>
+            <button type="button" class="step" data-attr="mente" data-dir="1" aria-label="Aumentar Mente">+</button>
+          </div>
+        </article>
+
+        <article class="card attr themed t-persona" data-attr="persona">
+          <h3>Persona</h3>
+          <div class="value" id="val-persona">0</div>
+          <div class="controls">
+            <button type="button" class="step" data-attr="persona" data-dir="-1" aria-label="Diminuir Persona">−</button>
+            <button type="button" class="step" data-attr="persona" data-dir="1" aria-label="Aumentar Persona">+</button>
+          </div>
+        </article>
+
+        <article class="card attr themed t-espirito" data-attr="espirito">
+          <h3>Espírito</h3>
+          <div class="value" id="val-espirito">0</div>
+          <div class="controls">
+            <button type="button" class="step" data-attr="espirito" data-dir="-1" aria-label="Diminuir Espírito">−</button>
+            <button type="button" class="step" data-attr="espirito" data-dir="1" aria-label="Aumentar Espírito">+</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="reset-row">
+        <button type="button" class="reset" id="reset">Redefinir atributos</button>
+      </div>
+    </section>
+
+    <!-- ESTATÍSTICAS DERIVADAS -->
+    <section class="section" aria-labelledby="derived-title">
+      <div class="section-head">
+        <h2 id="derived-title">Estatísticas Derivadas</h2>
+      </div>
+
+      <div class="derived-grid">
+        <article class="card stat">
+          <h3>Defesa</h3>
+          <div class="stat-value"><span id="out-defesa">2</span></div>
+          <p class="formula">2 + (Corpo × 1,5), arredondado para cima</p>
+        </article>
+
+        <article class="card stat">
+          <h3>Esquiva</h3>
+          <div class="stat-value"><span id="out-esquiva">2</span></div>
+          <p class="formula">2 + (Mente × 2), arredondado para cima</p>
+        </article>
+
+        <article class="card stat">
+          <h3>Pontos de Vida</h3>
+          <div class="stat-value"><span id="out-pv">14</span><small>PV</small></div>
+          <p class="formula">14 + (Corpo × 6)</p>
+        </article>
+
+        <article class="card stat">
+          <h3>Pontos de Ação</h3>
+          <div class="stat-value"><span id="out-pa">0</span><small>PA</small></div>
+          <p class="formula">Corpo × 12</p>
+        </article>
+
+        <article class="card stat">
+          <h3>Valor de Especialização</h3>
+          <div class="stat-value"><span id="out-ve">2</span><small>VE</small></div>
+          <p class="formula">2 + (Mente × 2)</p>
+        </article>
+
+        <article class="card stat">
+          <h3>Deslocamento</h3>
+          <div class="stat-value"><span id="out-desloc">5</span><small>m</small></div>
+          <p class="formula">5 + (Corpo × 1,5) metros</p>
+        </article>
+
+        <article class="card stat damage themed t-corpo" id="damageCard">
+          <h3>Dado de Dano</h3>
+          <div class="dmg-body">
+            <div class="stat-value"><span id="out-dano">1d4 + 0</span></div>
+            <button type="button" class="roll-btn" id="rollDamage">Rolar dano</button>
+          </div>
+          <p class="formula">Corpo 0–2: 1d4 + Corpo · Corpo 3–5: 2d4 + Corpo</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PERÍCIAS -->
+    <section class="section" aria-labelledby="skills-title">
+      <div class="section-head">
+        <h2 id="skills-title">Perícias</h2>
+        <button type="button" class="reset" id="resetSkills">Redefinir perícias</button>
+      </div>
+      <div class="panels" id="skillPanels"></div>
+    </section>
+
+    <!-- ESPÍRITO -->
+    <section class="section" aria-labelledby="espirito-title">
+      <div class="section-head">
+        <h2 id="espirito-title">Espírito</h2>
+      </div>
+      <div id="espiritoRoot"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
