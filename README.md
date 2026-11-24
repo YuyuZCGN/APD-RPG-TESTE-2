@@ -1,11 +1,28 @@
 # Ficha de Personagem
 
-Interactive character creation sheet for a tabletop RPG. Plain HTML, CSS and JavaScript, with no dependencies and no build step. Dark fantasy / post-apocalyptic theme, responsive for desktop and mobile.
+Interactive character creation sheet and character manager for a tabletop RPG. Plain HTML, CSS and JavaScript, with no dependencies and no build step. Dark fantasy / post-apocalyptic theme, responsive for desktop and mobile.
 
-## How it works
+## Characters
 
-- Four attributes (Corpo, Mente, Persona, Espírito) start at 0.
-- The player raises or lowers attributes with the + and − buttons. There is no point limit: attributes can grow without a ceiling, but can't go below 0. The sheet shows the total points distributed.
+- The site opens on a **starting menu** listing every saved character (name, attribute summary, PV and last update), newest first, with a **Criar Novo Personagem** button at the bottom.
+- Click a character to open its sheet. Each character is fully independent: attributes, Perícias, Advantage counters, Espírito options, notes and name never mix.
+- On a sheet, **← Personagens** returns to the menu without losing anything.
+- From the menu you can **rename**, **export** or **delete** a character. Deleting asks for confirmation.
+- A new character starts with every attribute at 0, every Perícia untrained and empty text boxes.
+
+### Saving
+
+- Everything is saved automatically to the browser (`localStorage`) on every change; text is saved a moment after you stop typing, and also when you close or leave the tab.
+- **Salvar Personagem** forces a save and shows the time of the last one.
+- Each character lives under its own unique id, so saving or importing can never overwrite another character.
+- Saved data is per browser and per site address. Clearing site data erases it, so use **Exportar JSON** for backups.
+- **Exportar JSON** downloads one character as a file; **Importar JSON** (in the menu) loads one or more exported files as **new** characters, so an import never replaces an existing one. Files are validated and sanitized, so a bad or edited file can't break the sheet.
+- The exported file also contains the calculated values (derived statistics, damage die, Pontos de Perícia), for reference. They are recomputed when the character is opened.
+- If you used an earlier single-character version of this site, its data is moved into a character called "Personagem anterior" the first time this version opens.
+
+## Attributes and derived statistics
+
+- Four attributes (Corpo, Mente, Persona, Espírito) start at 0. There is no point limit; they can't go below 0.
 - Derived statistics update instantly:
 
 | Statistic | Formula |
@@ -17,32 +34,44 @@ Interactive character creation sheet for a tabletop RPG. Plain HTML, CSS and Jav
 | Valor de Especialização (VE) | 2 + Mente × 2 |
 | Deslocamento | 5 + Corpo × 1.5 meters |
 
-- "Redefinir atributos" resets everything to 0.
-- Attribute values are remembered in the browser between visits.
-
-### Perícias
-
-- Three categories (Corpo, Mente, Persona), each with its own panel, Pontos de Perícia counter, training levels (0–5, bonus = level) and a roll button per Perícia.
-- Cost: level 0 → 1 costs 1 point, every later level costs 2.
-- Points come from the matching attribute and **accumulate** per attribute level (e.g. Corpo 3 = 4 + 4 + 5 = 13). Above 5 the attribute gives no extra points.
-- Free trained Perícias (Corpo 2, Mente 3, Persona 2) are chosen with the ★ Grátis button: they start at level 1 at no cost.
-- Lowering an attribute never removes training. If the points no longer cover the spending, the panel shows an "Alocação inválida" warning and blocks upgrades until it is fixed.
-- "Redefinir perícias" resets training, free picks and Advantage counters.
 - Dado de Dano: 1d4 + Corpo for Corpo 0–2, 2d4 + Corpo from Corpo 3 up, with its own roll button.
 
-### Rolls and Advantage
+## Perícias and Pontos de Perícia
 
-- Normal check: 1d8 + Perícia bonus.
-- Every Perícia has an Advantage counter (never below 0). With Advantage the check rolls 2d8, keeps the highest and adds the bonus. Both dice are shown.
+- Corpo, Mente and Persona each have their own panel, their own pool of Pontos de Perícia, training levels (0–5, bonus = level) and a roll button per Perícia. **The pools are never shared.** Espírito gives no Pontos de Perícia.
+- Cost: level 0 → 1 costs 1 point, every later level costs 2.
+- Points **accumulate** per attribute level (e.g. Corpo 3 = 4 + 4 + 5 = 13). Unspent points stay available when you raise any attribute, and raising one attribute never touches another one's points. Above 5 an attribute gives no extra points.
+- Free trained Perícias (Corpo 2, Mente 3, Persona 2) are chosen with the ★ Grátis button: they start at level 1 at no cost.
+
+### Lowering an attribute
+
+- The Pontos de Perícia granted by the removed attribute level are removed from that attribute's pool.
+- If the training no longer fits, the **most recent purchases are removed first** (last in, first out) and only as many as needed. Training bought with points from lower attribute levels is kept whenever possible.
+- A red notice (below the attributes and in the affected panel) lists exactly which Perícias lost levels, and those rows are highlighted. Consecutive reductions merge into one notice (for example Corpo 3 → 1). Raising the attribute again returns the points but does not restore removed training. Dismiss the notice with ×.
+
+### Resets
+
+- **Redefinir atributos** sets all attributes to 0 and, through the rule above, removes the paid training they funded. Free picks, Advantage counters and Espírito options stay.
+- **Redefinir perícias** clears all training, free picks and Advantage counters. Attributes and Espírito options stay.
+- Both open a confirmation window that explains what will change. **Confirmar** is disabled for 5 seconds and counts down ("Confirmar (5)" … "Confirmar (0)"). Cancel (button, Esc or clicking outside) closes it at any time, and nothing is changed until you confirm. The countdown restarts every time the window opens.
+
+## Rolls and Advantage
+
+- Normal check: 1d8 + Perícia bonus, with a dice animation.
+- Every Perícia has an Advantage counter. It can't go below 0 and has **no upper limit**. With Advantage (any value above 0) the check always rolls 2d8, keeps the highest and adds the bonus; both dice are shown and the kept one is marked.
 - The Espírito resistance check uses the Espírito value as its bonus.
 
-### Espírito
+## Espírito
 
 - Option A: Advantage in Fortitude and Espírito checks.
 - Option B: pick one Perícia to receive Advantage.
-- Option C: pick one special ability.
+- Option C: pick one special ability (selectable boxes, one at a time).
 
-### Visual identity
+## Notes
+
+Three text boxes at the bottom of each sheet, saved with the character: **Habilidades**, **Habilidades de Atributo** and **Anotações pessoais**. They support multiple lines and can be resized or scrolled.
+
+## Visual identity
 
 Corpo is red (glow), Mente blue (floating particles), Persona purple (floating "!") and Espírito grey (fog). Effects are CSS-only and switch off when the device asks for reduced motion.
 
